@@ -1,0 +1,153 @@
+<html>
+
+    <head>
+        
+        <title>Reaction Timer</title>
+        
+        <style type="text/css">
+            
+            #user-input{
+                margin-bottom: 10px;
+                float:left;
+            }
+            
+            #num-tries{
+                margin-top: 10px;
+                
+            }
+        
+            #shape {
+                width: 200px;
+                height: 200px;
+                background-color: red;
+                display: none;
+                position: relative;
+            }
+            
+            .bold {
+                font-weight:bold;
+            }
+            
+            #average-score {
+                display: none;
+            }
+             
+            #click, #your-time, #num-tries {
+                display: none;
+            }
+        </style>
+    </head>
+    
+    <body>
+        
+        <h1> Test Your Reactions!</h1>
+        
+        <input type="text" style="width: 250px" placeholder="How many tries would you like?" id="user-input" />
+        
+        <p id="num-tries"> </p>
+    
+        <p id="click"> Click on the boxes and circles as quickly as you can!</p>
+        
+        <p class="bold" id="your-time"> Your time: <span id="timeTaken"></span></p>
+        
+        <div id="shape"></div>
+        
+        <p class="bold" id="average-score"> </p>
+        
+        <script type="text/javascript">
+            
+                var start;
+            
+                var counter = 1;
+            
+                var sum = 0;
+            
+                var timeTaken = 0;
+            
+                var num = 0;
+            
+                document.getElementById("user-input").addEventListener('input', function() {
+                    
+                    num = this.value;
+                    document.getElementById("num-tries").innerHTML = "You have " + this.value + " tries!";
+
+                    document.getElementById("user-input").style.display = "none";
+                    document.getElementById("num-tries").style.display = "block";
+                    
+                    AppearAfterTimeout();
+
+                })
+
+            
+                function AppearAfterTimeout() {
+                    
+                    setTimeout(makeShapeAppear, Math.random() * 3000);
+                    
+                }
+            
+                function makeShapeAppear() {
+                    
+                    var top = Math.random() * 400;
+                    
+                    var left = Math.random() * 400;
+                    
+                    var width = (Math.random() * 200) + 100;
+                    
+                    if (Math.random() > 0.5) {
+                        
+                        document.getElementById("shape").style.borderRadius = "50%";
+                    } else {
+                        document.getElementById("shape").style.borderRadius = "0";
+                    }
+                    
+                    document.getElementById("shape").style.backgroundColor = getRandomColor();
+                    
+                    document.getElementById("shape").style.width = width + "px"
+                    
+                    document.getElementById("shape").style.height = width + "px"
+                    
+                    document.getElementById("shape").style.top = top + "px";
+                    
+                    document.getElementById("shape").style.left = left + "px";
+                    
+                    document.getElementById("shape").style.display = "block";
+                    
+                    start = new Date().getTime();
+                }
+            
+                function getRandomColor(){
+                    var letters = '0123456789ABCDEF'.split('');
+                    var color = '#';
+                    for(var i = 0; i < 6; i++) {
+                        color += letters[Math.floor(Math.random() * 16)];
+                    }
+                    return color;
+                }
+            
+                 document.getElementById("shape").onclick = function() {
+                      
+                        var end = new Date().getTime();
+                     
+                        if (counter == num) {
+                            var average = sum/counter;
+                            average = average.toFixed(2);
+                            document.getElementById("average-score").innerHTML = "Your average reaction time is " + average + "s!";
+                            document.getElementById("average-score").style.display = "inline";
+                            document.getElementById("shape").style.display = "none";
+                            document.getElementById("timeTaken").style.display = "none";
+                            document.getElementById("your-time").style.display = "none";
+                        } else {
+                            counter++;
+                            sum += timeTaken;
+                            document.getElementById("shape").style.display = "none"; 
+                            timeTaken = (end - start)/1000;
+                            AppearAfterTimeout();
+                        }  
+                }
+    
+               
+        </script>
+    
+    </body>
+    
+</html>
